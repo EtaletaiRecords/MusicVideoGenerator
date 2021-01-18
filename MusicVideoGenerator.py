@@ -1,47 +1,66 @@
-import os, sys
+import os, sys, argparse
 
-def main(argv):
+# TODO:
+# Issues:
+# Only works in 4/4
+#
+# ADD:
+# Add automatic bpm detection
+# Change velocity based on intensity
+# Choose videos to use based on tags
+# 720p vs 1080p option
+
+
+def main(args):
     '''
     Generates a Music Video based on a specfic song by calling a few python files and movie ediitng command line tools
 
     Arguments:
     1. Song name (should be located in music/)
     2. Song BPM
-    3. Complexity (2 OR 3), 2 for quicker and 3 for more intense visuals
+    3. Complexity (2 OR 3), 2 for quicker and 3 for more intense visuals (3 by default)
 
     '''
 
-    os.system("python SimpleVid.py " + argv[0] + " " + argv[1] + " " + argv[2])
+    # Generates n(compelxity) number of randomized videos   
+    os.system("python SimpleVid.py " + args.songName + " " + args.bpm + " " + args.complexity)
     
     print("Smallerizing")
     
-    # makes all files 720p
-    for i in range(int(argv[2])):
-        os.system("ffmpeg -i temp/"+str(argv[0])+str(i)+".mp4 -vf scale=1280:780 temp/small"+str(argv[0])+str(i)+".mp4")
+    # makes all videos 720p
+    for i in range(int(args.complexity)):
+        os.system("ffmpeg -i temp/"+ args.songName +str(i)+".mp4 -vf scale=1280:780 temp/small"+ args.songName +str(i)+".mp4 -hide_banner -loglevel warning")
     
-    if int(argv[2]) == 3:
-
+    # Blends all videos
+    if int(args.complexity) == 3:
         print("Blending")
-        for i in range(int(argv[2])-1):
-            os.system("ffmpeg -i temp/small"+str(argv[0])+str(i)+".mp4 -i temp/small"+str(argv[0])+str(i+1)+".mp4 -filter_complex blend='difference' temp/output"+str(argv[0])+str(i)+".mp4")
+        for i in range(int(args.complexity)-1):
+            os.system("ffmpeg -i temp/small"+ args.songName +str(i)+".mp4 -i temp/small"+ args.songName +str(i+1)+".mp4 -filter_complex blend='difference' temp/output"+args.songName+str(i)+".mp4 -hide_banner -loglevel warning")
         
         print("Mashing")
-        os.system("ffmpeg -i temp/output"+str(argv[0])+"0.mp4 -i temp/output"+str(argv[0])+"1.mp4 -filter_complex blend='difference temp/"+str(argv[0])+"GeneratedMusicVideo.mp4")
+        os.system("ffmpeg -i temp/output"+args.songName+"0.mp4 -i temp/output"+args.songName+"1.mp4 -filter_complex blend='difference temp/"+args.songName+"GeneratedMusicVideo.mp4 -hide_banner -loglevel warning")
 
-    elif int(argv[2]) == 2:
+    elif int(args.complexity) == 2:
         print("Blending")
-        for i in range(int(argv[2])-1):
-            os.system("ffmpeg -i temp/small" + str(argv[0]) + str(i) + ".mp4 -i temp/small" + str(argv[0]) + str(i + 1) +".mp4 -filter_complex blend='difference' temp/" + str(argv[0]) + "GeneratedMusicVideo.mp4")
+        for i in range(int(args.complexity)-1):
+            os.system("ffmpeg -i temp/small" + args.songName + str(i) + ".mp4 -i temp/small" + args.songName + str(i + 1) +".mp4 -filter_complex blend='difference' temp/" + args.songName + "GeneratedMusicVideo.mp4 -hide_banner -loglevel warning")
 
     else:
         print("Invalid compleity: please choose 2 (fast) or 3 (slow, more complicated output)")
     
     # add audio
-    os.system("ffmpeg -i temp/" + str(argv[0])  + "GeneratedMusicVideo.mp4 -i music/" + str(argv[0]) + " -map 0:v -map 1:a -c:v copy out/output" + str(argv[0]) + "GeneratedMusicVideo.mp4")
+    os.system("ffmpeg -i temp/" + args.songName  + "GeneratedMusicVideo.mp4 -i music/" + args.songName + " -map 0:v -map 1:a -c:v copy out/output" + args.songName + "GeneratedMusicVideo.mp4 -hide_banner -loglevel warning")
 
+    # file clean up
     print("deleting temporaary files")
     os.system("del temp\* ")
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    parser = argparse.ArgumentParser(description='Generate a music video - talent free!')
+    parser.add_argument("-songName", help="Song name (should be located in music/) i.e Music1.wav")
+    parser.add_argument("-bpm", help="Song BPM")
+    parser.add_argument("--complexity", help="Complexity (2 OR 3), 2 for quicker and 3 for more intense visuals (3 by default)", default="3")
+    args = parser.parse_args()
+    
+    main(args)

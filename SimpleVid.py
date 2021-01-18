@@ -2,11 +2,6 @@ from GenerateTimeStamps import *
 from moviepy.editor import *
 import random, math, os, sys
 
-# TODO: 
-# - Only Works in 4/4
-# - just not fast
-# - load music after for increased quality
-
 def preload():
     '''
     preloads all video files once
@@ -21,19 +16,19 @@ def preload():
     return videosList
 
 
-def make_subMovie(filename, bpm, videosList, output):
+def make_subMovie(filename, bpm, videosList, output, start, finish, duration):
     '''
     Saves a simple movie synced to the provided audio file
 
-    filename: filname of song (.wav)
-    bpm: beats per minute tempo of the song
-    videos: videos to use
-    output desired filename output
-    '''
+    filename (str): filname of song (.wav)
+    bpm (int / float): beats per minute tempo of the song
+    videos([VideoFile, VideoFile, ..]): videos to use
+    output (str) desired filename output
 
-    print("Analysing waveform")
-    start, finish = guess_first_and_last_DownBeat("music/"+str(filename))
-    duration = get_duration("music/"+str(filename))
+    start: first downbeat
+    finish: last downbeat
+    duration: total duration
+    '''
 
     # time between beats
     lengthOfABeat = 1 / (bpm / 60)
@@ -46,7 +41,8 @@ def make_subMovie(filename, bpm, videosList, output):
     
     # ambient intro on start
     elif start > 0:
-        videos.append(VideoFileClip("titles/"+random.choice([x for x in os.listdir("titles/")])).subclip(0,start))
+        clip = VideoFileClip("titles/"+random.choice([x for x in os.listdir("titles/")])).subclip(0,start)
+        videos.append(clip.fx( vfx.fadein, duration=clip.duration/2))
 
     new4BarBlock = True # outlines every 4 bars to switch up speeds
     firstDB = start # used to show progress
@@ -72,7 +68,7 @@ def make_subMovie(filename, bpm, videosList, output):
     
     # Ambient outro
     if start < duration:
-        videos.append(VideoFileClip("titles/"+random.choice([x for x in os.listdir("titles/")])).subclip(0,duration-start))
+        videos.append(VideoFileClip("titles/"+random.choice([x for x in os.listdir("titles/")])).subclip(0,duration-start).fx( vfx.fadeout, duration=clip.duration/2))
 
     final_clip = concatenate_videoclips(videos,method="compose")
     
@@ -84,8 +80,15 @@ def main(argv):
 
     videosList = preload()
 
+    
+    print("Analysing waveform")
+    start, finish = guess_first_and_last_DownBeat("music/"+argv[0])
+    duration = get_duration("music/"+argv[0])
+
+    bpm = argv[1]
+
     for i in range(int(argv[2])):
-        make_subMovie(argv[0],int(argv[1]),videosList,i)
+        make_subMovie( argv[0], int(bpm), videosList, i, start, finish, duration)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

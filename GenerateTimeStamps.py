@@ -1,6 +1,7 @@
 import numpy as np
 from tinytag import TinyTag
 from scipy.io.wavfile import read, write
+import os
 
 def get_duration(filename):
     '''
@@ -56,3 +57,10 @@ def get_timestamps(filename, bpm):
         start += lengthOfABeat
 
     return timeStamps
+
+def guess_bpm(filename):
+    '''
+    Reads a .wav file and returns an estimate of the bpm, If bpm is known it should be entered manually for best results
+    '''
+    print("Estimating song bpm")
+    return os.system("estimate_bpm.py --filename " + str(filename))
