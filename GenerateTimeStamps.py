@@ -38,7 +38,7 @@ def guess_first_and_last_DownBeat(filename):
 
 def get_timestamps(filename, bpm):
     '''
-    Returns a list [float,float,..] of the timestamps of all the downbeats in the song
+    Returns a list [float,float,..] of the timestamps of all the 4 bar regions in the song
 
     Parameters:
     - bpm (the tempo (beats per minute) of the song)
@@ -53,14 +53,84 @@ def get_timestamps(filename, bpm):
     lengthOfABeat = 1 / (bpm / 60)
 
     while start < finish:
-        timeStamps.append(start + lengthOfABeat) 
-        start += lengthOfABeat
+        timeStamps.append(start + lengthOfABeat * 16) 
+        start += lengthOfABeat * 16 
 
     return timeStamps
+
+def get_counts_in_4_bars(filename, bpm):
+    '''
+    returns the number of data points in 4 bars of a file for downstream works
+    '''
+    lengthOfABeat = 1 / (bpm / 60)
+    lengthof16beats = lengthOfABeat * 16 # 4 bars
+
+    Fs, data = read(filename)
+
+    # one stereo channel for ease
+    data = data[:,0]
+
+    length = len(data)
+    duration = get_duration(filename)
+
+    # find how many counts in 16 beats
+    for count, point in enumerate(data):
+        if count / length >= lengthof16beats / duration:
+            return count
+
+def get_intensities(filename, bpm):
+    '''
+    Returns {4barCount(int):intensity(str)} for each 4 bar segment in the given .wav file
+
+    Intensities = "Low","Medium","High
+    '''
+    
+    duration = get_duration(filename)
+    start, finish = guess_first_and_last_DownBeat(filename)
+    countsIn4Bars = get_counts_in_4_bars(filename,bpm)
+
+    intensities = {}
+
+    # analyse waveform
+    Fs, data = read(filename)
+
+    # one stereo channel for ease
+    data = data[:,0]
+
+    length = len(data)
+    
+    current4Bar = [0,0] # count, sum
+    barBlock = 0 # current index of 4 bar block
+    for count, point in enumerate(data):
+        if count / length >= start / duration and count / length <= finish / duration: # only calculate between first and last downbeat
+            
+            current4Bar[0] += 1
+            current4Bar[1] += point
+
+            # calculate and save average every 4 bars
+            if current4Bar[0] >= countsIn4Bars:
+                
+                intensities[barBlock] = current4Bar[1] / current4Bar[0]
+    
+                current4Bar = [0,0]
+                barBlock+=1
+    
+    maxAverageValue = max(intensities.values())
+
+    # all instensities are relative to one another
+    for key in intensities.keys():
+        if intensities[key] > 0.8 * maxAverageValue:
+            intensities[key] = "High"
+        elif intensities[key] > 0.5 * maxAverageValue:
+            intensities[key] = "Medium"
+        else:
+            intensities[key] = "Low"
+
+    return intensities
+
 
 def guess_bpm(filename):
     '''
     Reads a .wav file and returns an estimate of the bpm, If bpm is known it should be entered manually for best results
     '''
-    print("Estimating song bpm")
-    return os.system("estimate_bpm.py --filename " + str(filename))
+    pass

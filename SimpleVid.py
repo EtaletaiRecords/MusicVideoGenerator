@@ -2,6 +2,10 @@ from GenerateTimeStamps import *
 from moviepy.editor import *
 import random, math, os, sys
 
+'''
+Simple, randomized, tempo synced video generation 
+'''
+
 def preload():
     '''
     preloads all video files once
@@ -45,13 +49,14 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration):
         videos.append(clip.fx( vfx.fadein, duration=clip.duration/2))
 
     new4BarBlock = True # outlines every 4 bars to switch up speeds
-    firstDB = start # used to show progress
+    beats = 0 # current beats rendered
     
     print("Generating video")
-    while start < finish:
-        
+    
+    while beats < (len(intensities) * 16):
+
         # switch up video rate every 4 bars
-        if (start - firstDB) % (lengthOfABeat * 16) == 0:
+        if beats % 16 == 0:
             new4BarBlock = True
 
         if new4BarBlock:
@@ -59,22 +64,33 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration):
             
         print(str(start / finish * 100) + "%/ rendered")
 
-        video = random.choice(videosList)
-        videostart = random.randint(0, math.floor(video.duration - 3)) # random video portion
+        while True:
+            try: # try / catch block to account for videos that are not long enough 
+                video = random.choice(videosList)
+                videostart = random.randint(0, math.floor(video.duration - lengthOfABeat * i)) # random video portion
+                break
+            except ValueError:
+                continue
+        
         videos.append(video.subclip(videostart,videostart + lengthOfABeat * i))
     
         start += (lengthOfABeat * i)
+        beats += i
         new4BarBlock = False
     
     # Ambient outro
     if start < duration:
-        videos.append(VideoFileClip("titles/"+random.choice([x for x in os.listdir("titles/")])).subclip(0,duration-start).fx( vfx.fadeout, duration=clip.duration/2))
+        clip = VideoFileClip("titles/"+random.choice([x for x in os.listdir("titles/")])).subclip(0,duration-start)
+        videos.append(clip.fx( vfx.fadeout, duration=clip.duration/2))
 
     final_clip = concatenate_videoclips(videos,method="compose")
     
     # write video
     final_clip.write_videofile(filename="temp/"+str(filename)+str(output)+".mp4",preset="ultrafast",threads=4,audio=False)
 
+    # memory save
+    for v in videos:
+        v.close()
 
 def main(argv):
 
