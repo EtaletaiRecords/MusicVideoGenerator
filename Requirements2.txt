@@ -1,0 +1,3 @@
+scipy
+tinytag
+-e git+git://github.com/RichardPienaar/moviepy.git@master#egg=moviepy

@@ -45,7 +45,10 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration, in
 
             # DYNAMIC video selection
             if intensities[current4BarBlock] == "High":
-                i = random.choice(HIGH_INTENSITY) 
+                if current4BarBlock > 0 and intensities[current4BarBlock - 1] == "Low": # If the previous section was low and this one is high, make it speedy by defualt
+                    i = 1
+                else:
+                    i = random.choice(HIGH_INTENSITY) 
             elif intensities[current4BarBlock] == "Medium":
                 i = random.choice(MEDIUM_INTENSITY)
             else:
@@ -53,7 +56,7 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration, in
             
             current4BarBlock += 1
 
-        print(str(start / finish * 100) + "%/ rendered")
+        print(str((beats / (len(intensities)*16) * 100)) + "%/ rendered")
 
         while True:
             try: # try / catch block to account for videos that are not long enough 

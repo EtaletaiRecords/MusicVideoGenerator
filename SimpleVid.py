@@ -62,7 +62,7 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration):
         if new4BarBlock:
             i = random.choice([1,4,4,4,8,8,16,16,16]) # random rate of change of the videos
             
-        print(str(start / finish * 100) + "%/ rendered")
+        print(str((beats / (len(intensities)*16) * 100)) + "%/ rendered")
 
         while True:
             try: # try / catch block to account for videos that are not long enough 
