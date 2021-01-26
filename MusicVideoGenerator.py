@@ -1,14 +1,16 @@
 import os, sys, argparse
 
 # TODO:
-# Issues:
-# Only works in 4/4
+# Bugs:
+# Fast detection a cycle off
+# Random video corruption
 #
 # ADD:
 # Add automatic bpm detection
 # Change velocity based on intensity
 # Choose videos to use based on tags
 # 720p vs 1080p option
+# different time signature support
 
 
 def main(args):

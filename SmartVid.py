@@ -8,7 +8,7 @@ Dynamic video generation - Intense sections of music will have faster visuals
 '''
 
 HIGH_INTENSITY = [1,1,1,1,4,4]
-MEDIUM_INTENSITY = [1,1,4,4,8,8,8,16]
+MEDIUM_INTENSITY = [4,4,4,4,8,8,8,16]
 LOW_INTENSITY = [8,8,8,16,16,16,16]
 
 
@@ -56,7 +56,6 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration, in
             
             current4BarBlock += 1
 
-        print(str((beats / (len(intensities)*16) * 100)) + "%/ rendered")
 
         while True:
             try: # try / catch block to account for videos that are not long enough 
@@ -70,6 +69,8 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration, in
     
         start += (lengthOfABeat * i)
         beats += i
+        
+        print(str((beats / (len(intensities)*16) * 100)) + "%/ rendered")
 
         new4BarBlock = False
     

@@ -99,29 +99,35 @@ def get_intensities(filename, bpm):
 
     length = len(data)
     
-    current4Bar = [0,0] # count, sum
+    count_ = 0
+    sum_ = float(0)
     barBlock = 0 # current index of 4 bar block
+
     for count, point in enumerate(data):
         if count / length >= start / duration and count / length <= finish / duration: # only calculate between first and last downbeat
             
-            current4Bar[0] += 1
-            current4Bar[1] += point
-
+            count_ += 1
+            sum_ += float(abs(point)) # absolute value because deviation from 0 (no volume) is what is important
+            
+            if sum_ < 0:
+                sys.exit()
+            
             # calculate and save average every 4 bars
-            if current4Bar[0] >= countsIn4Bars:
-                
-                intensities[barBlock] = current4Bar[1] / current4Bar[0]
+            if count_ >= countsIn4Bars:
+                intensities[barBlock] = sum_ / count_
     
-                current4Bar = [0,0]
-                barBlock+=1
+                count_ = 0
+                sum_ = float(0)
+                barBlock += 1
+    
     
     maxAverageValue = max(intensities.values())
 
     # all instensities are relative to one another
     for key in intensities.keys():
-        if intensities[key] > 0.8 * maxAverageValue:
+        if intensities[key] > 0.9 * maxAverageValue:
             intensities[key] = "High"
-        elif intensities[key] > 0.5 * maxAverageValue:
+        elif intensities[key] > 0.65 * maxAverageValue:
             intensities[key] = "Medium"
         else:
             intensities[key] = "Low"
