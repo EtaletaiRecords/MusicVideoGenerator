@@ -67,8 +67,7 @@ MusicVideoGenerator.py -songName [song.wav] -bpm [int] --output [outputPrefix] -
 
 ## I've used this to make videos that now have billions of hits, how can I credit you?
 
-- PayPal me at richardpienaar1@gmail.com xx
-- Jokes aside a public link to the repo in the description would be appreciated :) 
+- A public link to this repo in the description would be appreciated :) 
 
 
 
