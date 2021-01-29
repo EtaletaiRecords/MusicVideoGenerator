@@ -11,7 +11,7 @@
 #### MusicVideoGenerator.py
 #### *.py
 
-## INSTALL DEPENDENCIES FROM A CONDA ENVIRONMENT (strongly reccomended)
+## INSTALL DEPENDENCIES FROM A CONDA ENVIRONMENT (strongly reccommended)
 
 ### make and activate new conda environment
 
@@ -50,5 +50,28 @@ MusicVideoGenerator.py -songName [song.wav] -bpm [int] --output [outputPrefix] -
 ## Where can I find sample videos to use?
 
 - https://www.pexels.com/
+- https://pixabay.com/
+
+## What is the ouput format?
+
+- 720p
+
+## How fast is my song? What is my songs BPM?
+
+- https://www.beatsperminuteonline.com/
+
+## Richard, this thing is so slow it's making my head spin. I could do it way faster in Generic X movie editing software!
+
+- Look, fair. My counter to that is you can leave and eat a sandwhich, call a loved one etc rather than have to sit through the hell hole that is the video editing process
+- You may have luck speeding it up by using smaller pool of lesser resolution videos, or using the --dynamic False flag if you only need tempo synced visuals. 
+
+## I've used this to make videos that now have billions of hits, how can I credit you?
+
+- PayPal me at richardpienaar1@gmail.com xx
+- Jokes aside a public link to the repo in the description would be appreciated :) 
+
+
+
+
 
 
