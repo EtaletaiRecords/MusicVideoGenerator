@@ -1,13 +1,9 @@
 import os, sys, argparse
 
 # TODO:
-# Bugs:
-# Fast detection a cycle off
-# Random video corruption
+# Only make 720p if already not **
 #
-# ADD:
 # Add automatic bpm detection
-# Change velocity based on intensity
 # Choose videos to use based on tags
 # 720p vs 1080p option
 # different time signature support
@@ -34,14 +30,14 @@ def main(args):
     # makes all videos 720p
     for i in range(int(args.complexity)):
         print("Smallerizing "+str(i))
-        os.system("ffmpeg -i temp/"+ args.songName +str(i)+".mp4 -vf scale=1280:780 temp/small"+ args.songName +str(i)+".mp4 -hide_banner -loglevel warning")
+        os.system("ffmpeg -i temp/"+ args.songName +str(i)+".mp4 -vf scale=1280:720 -crf 18 -preset slow temp/small"+ args.songName +str(i)+".mp4 -hide_banner -loglevel warning")
     
 
     # get output name
     if args.output:
         outputName = args.output
     else:
-        outputName = "output" + args.songName + "GeneratedMusicVideo.mp4"
+        outputName = args.songName # song name by default
 
     # Blends all videos
     if int(args.complexity) == 3:
@@ -61,8 +57,11 @@ def main(args):
     else:
         print("Invalid compleity: please choose 2 (fast) or 3 (slow, more complicated output)")
     
+    # make temporary .mp3 file to add to the mp4 video (.wav not supported directly)
+    os.system("ffmpeg -i music/" + args.songName +" -ab 320k -hide_banner -loglevel warning temp/tempAudio.mp3")
+
     # add audio
-    os.system("ffmpeg -i temp/" + args.songName  + "GeneratedMusicVideo.mp4 -i music/" + args.songName + " -map 0:v -map 1:a -c:v copy out/" + outputName + ".mp4 -hide_banner -loglevel warning")
+    os.system("ffmpeg -i temp/" + args.songName  + "GeneratedMusicVideo.mp4 -i temp/tempAudio.mp3 -c copy -map 0:v:0 -map 1:a:0 out/" + outputName + ".mp4 -hide_banner -loglevel warning")
 
     # file clean up
     print("deleting temporaary files")

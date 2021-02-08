@@ -82,7 +82,7 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration, in
     final_clip = concatenate_videoclips(videos,method="compose")
     
     # write video
-    final_clip.write_videofile(filename="temp/"+str(filename)+str(output)+".mp4",preset="ultrafast",threads=4,audio=False)
+    final_clip.write_videofile(filename="temp/"+str(filename)+str(output)+".mp4",preset="ultrafast",audio=False)
 
     # memory save
     for v in videos:

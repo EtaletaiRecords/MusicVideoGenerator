@@ -5,6 +5,11 @@ import random, math, os, sys
 '''
 Simple, randomized, tempo synced video generation 
 '''
+def invert_green_blue(image):
+    '''
+    Inverts green and blue pixels of a clip (VideoFileClip)
+    '''
+    return image[:,:,[0,2,1]]
 
 def preload():
     '''
@@ -13,9 +18,16 @@ def preload():
     
     videosList = []
 
-    print("Preloading")
+    print("Preloading Videos")
+
+    
+
     for vid in os.listdir("videos/"):
-        videosList.append(VideoFileClip("videos/" + vid, target_resolution=(720,1280)))
+        if random.random() > 0.5:
+
+            videosList.append(VideoFileClip("videos/" + vid, target_resolution=(720,1280)))
+        else:
+            videosList.append(VideoFileClip("videos/" + vid, target_resolution=(720,1280)).fl_image( invert_green_blue )) # extra colours
     
     return videosList
 
@@ -86,7 +98,7 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration):
     final_clip = concatenate_videoclips(videos,method="compose")
     
     # write video
-    final_clip.write_videofile(filename="temp/"+str(filename)+str(output)+".mp4",preset="ultrafast",threads=4,audio=False)
+    final_clip.write_videofile(filename="temp/"+str(filename)+str(output)+".mp4",preset="ultrafast",audio=False)
 
     # memory save
     for v in videos:
