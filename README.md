@@ -1,5 +1,5 @@
 
-# ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+) SETTUP
+# ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+) SET UP
 
 ## Required Folder structure:
 
@@ -25,7 +25,7 @@ pip install -r requirements2.txt
 
 # ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) USEAGE:
  
-MusicVideoGenerator.py -songName [song.wav] -bpm [int] --output [outputPrefix] --dynamic [True/False]
+> python MusicVideoGenerator.py -songName [song.wav] -bpm [int] --output [outputPrefix] --dynamic [True/False]
 
 # ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+) FAQS:
 
@@ -33,7 +33,7 @@ MusicVideoGenerator.py -songName [song.wav] -bpm [int] --output [outputPrefix] -
 
 - This program cleverly assembles your previously downloaded scaffold videos into a tempo synced music video based on a provided input song and bpm
 
-## How does is do it?
+## How does it do it?
 
 1. Analyses a .wav file (located in music/)
 2. Generates 3 seperate tempo and dynamically synced music videos out of random .mp4 videos located in videos/
