@@ -1,4 +1,4 @@
-import os, sys, argparse
+import os, sys, argparse, time
 
 # TODO:
 # Only make 720p if already not **
@@ -20,6 +20,7 @@ def main(args):
 
     '''
     
+    start = time.time()
 
     # Generates n(compelxity) number of randomized videos   
     if args.dynamic:
@@ -29,9 +30,11 @@ def main(args):
     
     # makes all videos 720p
     for i in range(int(args.complexity)):
-        print("Smallerizing "+str(i))
-        os.system("ffmpeg -i temp/"+ args.songName +str(i)+".mp4 -vf scale=1280:720 -crf 18 -preset slow temp/small"+ args.songName +str(i)+".mp4 -hide_banner -loglevel warning")
-    
+        if not os.path.exists("temp/small"+ args.songName +str(i)+".mp4"):
+            print("Smallerizing "+str(i))
+            os.system("ffmpeg -i temp/"+ args.songName +str(i)+".mp4 -vf scale=1280:720 -crf 18 -preset medium temp/small"+ args.songName +str(i)+".mp4 -hide_banner -loglevel warning")
+        else:
+            print("already small"+str(i))
 
     # get output name
     if args.output:
@@ -42,11 +45,11 @@ def main(args):
     # Blends all videos
     if int(args.complexity) == 3:
         for i in range(int(args.complexity)-1):
-            print("Blending "+str(i))
+            print("Blending videos together "+str(i))
 
             os.system("ffmpeg -i temp/small"+ args.songName +str(i)+".mp4 -i temp/small"+ args.songName +str(i+1)+".mp4 -filter_complex blend='difference' temp/output"+args.songName+str(i)+".mp4 -hide_banner -loglevel warning")
         
-        print("Mashing")
+        print("Mashing those blended videos together")
         os.system("ffmpeg -i temp/output"+args.songName+"0.mp4 -i temp/output"+args.songName+"1.mp4 -filter_complex blend='difference temp/"+args.songName+"GeneratedMusicVideo.mp4 -hide_banner -loglevel warning")
 
     elif int(args.complexity) == 2:
@@ -65,8 +68,13 @@ def main(args):
 
     # file clean up
     print("deleting temporaary files")
-    os.system("del temp\* ")
+    for vid in os.listdir("temp/"):
+        os.remove("temp/"+vid)
+    
+    end = time.time()
+    print(end - start)
 
+    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate a music video - talent free!')

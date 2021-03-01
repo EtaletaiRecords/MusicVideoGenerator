@@ -125,7 +125,7 @@ def get_intensities(filename, bpm):
 
     # all instensities are relative to one another
     for key in intensities.keys():
-        if intensities[key] > 0.9 * maxAverageValue:
+        if intensities[key] > 0.98 * maxAverageValue:
             intensities[key] = "High"
         elif intensities[key] > 0.65 * maxAverageValue:
             intensities[key] = "Medium"

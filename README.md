@@ -3,7 +3,7 @@
 
 ## Required Folder structure:
 
-#### music/ (folder for all song files, .wav only) 
+#### music/ (folder for all song files, .wav only, no spaces in the name) 
 #### temp/ (required for intermediate video generation)
 #### out/ (output folder)
 #### titles/ (input videos that are LONG - only for long intro /outro songs, .mp4 only)

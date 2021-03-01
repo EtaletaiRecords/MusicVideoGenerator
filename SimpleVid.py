@@ -20,14 +20,16 @@ def preload():
 
     print("Preloading Videos")
 
-    
-
     for vid in os.listdir("videos/"):
         if random.random() > 0.5:
 
             videosList.append(VideoFileClip("videos/" + vid, target_resolution=(720,1280)))
         else:
-            videosList.append(VideoFileClip("videos/" + vid, target_resolution=(720,1280)).fl_image( invert_green_blue )) # extra colours
+            videosList.append(VideoFileClip("videos/" + vid, target_resolution=(720,1280)).fl_image( invert_green_blue ))
+    
+    for vid in videosList:
+        if vid.size[0] > 1280 or vid.size[1] > 720:
+            videosList.remove(vid)
     
     return videosList
 

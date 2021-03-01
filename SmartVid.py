@@ -7,10 +7,9 @@ import random, math, os, sys
 Dynamic video generation - Intense sections of music will have faster visuals
 '''
 
-HIGH_INTENSITY = [1,1,1,1,4,4]
+HIGH_INTENSITY = [1,1,1,4,4,4]
 MEDIUM_INTENSITY = [4,4,4,4,8,8,8,16]
 LOW_INTENSITY = [8,8,8,16,16,16,16]
-
 
 def make_subMovie(filename, bpm, videosList, output, start, finish, duration, intensities):
     # time between beats
@@ -32,7 +31,7 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration, in
 
     beats = 0 # current beats rendered
     
-    print("Generating video")
+    print("Generating video - " + str(output))
 
     while beats < (len(intensities) * 16):
 
@@ -41,8 +40,6 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration, in
             new4BarBlock = True
 
         if new4BarBlock:
-            print(intensities[current4BarBlock])
-
             # DYNAMIC video selection
             if intensities[current4BarBlock] == "High":
                 if current4BarBlock > 0 and intensities[current4BarBlock - 1] == "Low": # If the previous section was low and this one is high, make it speedy by defualt
@@ -79,14 +76,21 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration, in
         clip = VideoFileClip("titles/"+random.choice([x for x in os.listdir("titles/")])).subclip(0,duration-start)
         videos.append(clip.fx( vfx.fadeout, duration=clip.duration/2))
 
+    
     final_clip = concatenate_videoclips(videos,method="compose")
     
-    # write video
-    final_clip.write_videofile(filename="temp/"+str(filename)+str(output)+".mp4",preset="ultrafast",audio=False)
+    if final_clip.size == (1280,720):
+        # write video
+        final_clip.write_videofile(filename="temp/small"+str(filename)+str(output)+".mp4",preset="ultrafast",threads=6,audio=False)
+    else:
+        # name output differently to denote not yet 720p
+        final_clip.write_videofile(filename="temp/"+str(filename)+str(output)+".mp4",preset="ultrafast",threads=6,audio=False)
 
     # memory save
     for v in videos:
         v.close()
+    final_clip.close()
+
 
 def main(argv):
 
