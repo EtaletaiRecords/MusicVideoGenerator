@@ -23,18 +23,19 @@ def main(args):
     start = time.time()
 
     # Generates n(compelxity) number of randomized videos   
-    if args.dynamic:
+    if args.dynamic == True:
         os.system("python SmartVid.py " + args.songName + " " + args.bpm + " " + args.complexity)
     else:
         os.system("python SimpleVid.py " + args.songName + " " + args.bpm + " " + args.complexity)
     
     # makes all videos 720p
+    print("making Subvideos 720p")
     for i in range(int(args.complexity)):
         if not os.path.exists("temp/small"+ args.songName +str(i)+".mp4"):
-            print("Smallerizing "+str(i))
+            print("Smallerizing video"+str(i))
             os.system("ffmpeg -i temp/"+ args.songName +str(i)+".mp4 -vf scale=1280:720 -crf 18 -preset medium temp/small"+ args.songName +str(i)+".mp4 -hide_banner -loglevel warning")
         else:
-            print("already small"+str(i))
+            print("Video" +str(i) +" is already 720p")
 
     # get output name
     if args.output:
@@ -45,7 +46,7 @@ def main(args):
     # Blends all videos
     if int(args.complexity) == 3:
         for i in range(int(args.complexity)-1):
-            print("Blending videos together "+str(i))
+            print("Blending videos together "+str(i+1))
 
             os.system("ffmpeg -i temp/small"+ args.songName +str(i)+".mp4 -i temp/small"+ args.songName +str(i+1)+".mp4 -filter_complex blend='difference' temp/output"+args.songName+str(i)+".mp4 -hide_banner -loglevel warning")
         

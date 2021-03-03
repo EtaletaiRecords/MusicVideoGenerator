@@ -1,15 +1,27 @@
 from GenerateTimeStamps import *
 from moviepy.editor import *
+
 import random, math, os, sys
 
 '''
 Simple, randomized, tempo synced video generation 
 '''
+
+PERCENTS = (0,10,20,30,40,50,60,70,80,90,100)
+
 def invert_green_blue(image):
     '''
     Inverts green and blue pixels of a clip (VideoFileClip)
     '''
     return image[:,:,[0,2,1]]
+
+def get_closest_percent(percent):
+    '''
+    returns lowest passed threshold
+    '''
+    for p in PERCENTS:
+        if percent - p < 10:
+            return p
 
 def preload():
     '''
@@ -21,11 +33,16 @@ def preload():
     print("Preloading Videos")
 
     for vid in os.listdir("videos/"):
-        if random.random() > 0.5:
-
+        randomiser = random.random() # seed to randomise individual videos orientation / colour to give illusion of change between videos
+        if randomiser < 0.3:
             videosList.append(VideoFileClip("videos/" + vid, target_resolution=(720,1280)))
-        else:
+        elif randomiser < 0.6:
             videosList.append(VideoFileClip("videos/" + vid, target_resolution=(720,1280)).fl_image( invert_green_blue ))
+        elif randomiser < 0.9:
+            videosList.append(VideoFileClip("videos/" + vid, target_resolution=(720,1280)).fx( vfx.mirror_x ))
+        else:
+            videosList.append(VideoFileClip("videos/" + vid, target_resolution=(720,1280)).fl_image( invert_green_blue ).fx( vfx.mirror_y ))
+
     
     for vid in videosList:
         if vid.size[0] > 1280 or vid.size[1] > 720:
@@ -64,10 +81,11 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration):
 
     new4BarBlock = True # outlines every 4 bars to switch up speeds
     beats = 0 # current beats rendered
+    currentRenderPercent = 0 # used to print progress to console
+
+    print("Generating video " + str(output+1))
     
-    print("Generating video")
-    
-    while beats < (len(intensities) * 16):
+    while start < finish:
 
         # switch up video rate every 4 bars
         if beats % 16 == 0:
@@ -76,8 +94,6 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration):
         if new4BarBlock:
             i = random.choice([1,4,4,4,8,8,16,16,16]) # random rate of change of the videos
             
-        print(str((beats / (len(intensities)*16) * 100)) + "%/ rendered")
-
         while True:
             try: # try / catch block to account for videos that are not long enough 
                 video = random.choice(videosList)
@@ -90,6 +106,13 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration):
     
         start += (lengthOfABeat * i)
         beats += i
+
+        # print progress to screen
+        percentRendered = get_closest_percent(start / finish * 100)
+        if percentRendered != currentRenderPercent:
+            currentRenderPercent = percentRendered
+            print(str(currentRenderPercent)+ "%/ rendered")
+
         new4BarBlock = False
     
     # Ambient outro
@@ -99,17 +122,21 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration):
 
     final_clip = concatenate_videoclips(videos,method="compose")
     
-    # write video
-    final_clip.write_videofile(filename="temp/"+str(filename)+str(output)+".mp4",preset="ultrafast",audio=False)
+    if final_clip.size == (1280,720):
+        # write video
+        final_clip.write_videofile(filename="temp/small"+str(filename)+str(output)+".mp4",preset="ultrafast",threads=6,audio=False)
+    else:
+        # name output differently to denote not yet 720p
+        final_clip.write_videofile(filename="temp/"+str(filename)+str(output)+".mp4",preset="ultrafast",threads=6,audio=False)
 
     # memory save
     for v in videos:
         v.close()
+    final_clip.close()
 
 def main(argv):
 
     videosList = preload()
-
     
     print("Analysing waveform")
     start, finish = guess_first_and_last_DownBeat("music/"+argv[0])

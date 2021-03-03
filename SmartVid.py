@@ -1,6 +1,6 @@
 from GenerateTimeStamps import *
 from moviepy.editor import *
-from SimpleVid import preload
+from SimpleVid import preload, get_closest_percent
 import random, math, os, sys
 
 '''
@@ -28,10 +28,12 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration, in
 
     new4BarBlock = True # outlines every 4 bars to switch up speeds
     current4BarBlock = 0 # current 4 bar block to pull intensities from
-
+    fadeOut = False # used to fade out before a drop
     beats = 0 # current beats rendered
+
+    currentRenderPercent = 0 # used to print progress to console
     
-    print("Generating video - " + str(output))
+    print("Generating video " + str(output+1))
 
     while beats < (len(intensities) * 16):
 
@@ -46,11 +48,19 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration, in
                     i = 1
                 else:
                     i = random.choice(HIGH_INTENSITY) 
+
             elif intensities[current4BarBlock] == "Medium":
                 i = random.choice(MEDIUM_INTENSITY)
-            else:
-                i = random.choice(LOW_INTENSITY)
-            
+            else: 
+                try:
+                    if intensities[current4BarBlock + 1] == "High": # check next section is a "drop"
+                        i = 16
+                        fadeOut = True
+                    else:
+                        i = random.choice(LOW_INTENSITY)
+                except KeyError:
+                    i = random.choice(LOW_INTENSITY)
+                
             current4BarBlock += 1
 
 
@@ -62,13 +72,21 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration, in
             except ValueError:
                 continue
         
-        videos.append(video.subclip(videostart,videostart + lengthOfABeat * i))
-    
+        if not fadeOut:
+            videos.append(video.subclip(videostart,videostart + lengthOfABeat * i))
+        else: # fadeout before a drop
+            videos.append(video.subclip(videostart,videostart + lengthOfABeat * i).fx(vfx.fadeout, duration=video.duration / 4))
+            fadeOut = False
+        
         start += (lengthOfABeat * i)
         beats += i
         
-        print(str((beats / (len(intensities)*16) * 100)) + "%/ rendered")
-
+        # print progress to screen
+        percentRendered = get_closest_percent((beats / (len(intensities)*16) * 100))
+        if percentRendered != currentRenderPercent:
+            currentRenderPercent = percentRendered
+            print(str(currentRenderPercent)+ "%/ rendered")
+       
         new4BarBlock = False
     
     # Ambient outro
@@ -76,7 +94,6 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration, in
         clip = VideoFileClip("titles/"+random.choice([x for x in os.listdir("titles/")])).subclip(0,duration-start)
         videos.append(clip.fx( vfx.fadeout, duration=clip.duration/2))
 
-    
     final_clip = concatenate_videoclips(videos,method="compose")
     
     if final_clip.size == (1280,720):
