@@ -75,7 +75,8 @@ def make_subMovie(filename, bpm, videosList, output, start, finish, duration, in
         if not fadeOut:
             videos.append(video.subclip(videostart,videostart + lengthOfABeat * i))
         else: # fadeout before a drop
-            videos.append(video.subclip(videostart,videostart + lengthOfABeat * i).fx(vfx.fadeout, duration=video.duration / 4))
+            videoFadeOut = video.subclip(videostart,videostart + lengthOfABeat * i)
+            videos.append(videoFadeOut.fx(vfx.fadeout, duration=videoFadeOut.duration / 4))
             fadeOut = False
         
         start += (lengthOfABeat * i)

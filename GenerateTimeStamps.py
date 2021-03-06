@@ -2,6 +2,7 @@ import numpy as np
 from tinytag import TinyTag
 from scipy.io.wavfile import read, write
 import os
+import sys
 
 def get_duration(filename):
     '''
@@ -125,7 +126,7 @@ def get_intensities(filename, bpm):
 
     # all instensities are relative to one another
     for key in intensities.keys():
-        if intensities[key] > 0.98 * maxAverageValue:
+        if intensities[key] > 0.96 * maxAverageValue:
             intensities[key] = "High"
         elif intensities[key] > 0.65 * maxAverageValue:
             intensities[key] = "Medium"
@@ -140,3 +141,12 @@ def guess_bpm(filename):
     Reads a .wav file and returns an estimate of the bpm, If bpm is known it should be entered manually for best results
     '''
     pass
+
+def main(argv):
+    '''
+    prints intensities to screen
+    '''
+    print(get_intensities(argv[0],int(argv[1])))
+
+if __name__ == "__main__":
+    main(sys.argv[1:])    

@@ -61,11 +61,15 @@ def main(args):
     else:
         print("Invalid compleity: please choose 2 (fast) or 3 (slow, more complicated output)")
     
-    # make temporary .mp3 file to add to the mp4 video (.wav not supported directly)
-    os.system("ffmpeg -i music/" + args.songName +" -ab 320k -hide_banner -loglevel warning temp/tempAudio.mp3")
+    # make temporary .aac file to add to the mp4 video (.wav not supported directly)
+    os.system("ffmpeg -i music/" + args.songName +" -ab 256k -hide_banner -loglevel warning temp/tempAudio.aac")
+
+    # chromashift to add pizazz\
+    print("Gliching final result")
+    os.system("ffmpeg -i temp/" + args.songName  + "GeneratedMusicVideo.mp4 -vf chromashift=crv=-200:cbv=100:crh=100 temp/" + args.songName  + "GeneratedMusicVideoFinal.mp4 -hide_banner -loglevel warning")
 
     # add audio
-    os.system("ffmpeg -i temp/" + args.songName  + "GeneratedMusicVideo.mp4 -i temp/tempAudio.mp3 -c copy -map 0:v:0 -map 1:a:0 out/" + outputName + ".mp4 -hide_banner -loglevel warning")
+    os.system("ffmpeg -i temp/" + args.songName  + "GeneratedMusicVideoFinal.mp4 -i temp/tempAudio.aac -c copy -map 0:v:0 -map 1:a:0 out/" + outputName + ".mp4 -hide_banner -loglevel warning")
 
     # file clean up
     print("deleting temporaary files")
