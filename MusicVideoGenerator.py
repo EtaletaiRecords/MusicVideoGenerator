@@ -69,6 +69,7 @@ def main(args):
     os.system("ffmpeg -i temp/" + args.songName  + "GeneratedMusicVideo.mp4 -vf chromashift=crv=-200:cbv=100:crh=100 temp/" + args.songName  + "GeneratedMusicVideoFinal.mp4 -hide_banner -loglevel warning")
 
     # add audio
+    print("Adding Audio")
     os.system("ffmpeg -i temp/" + args.songName  + "GeneratedMusicVideoFinal.mp4 -i temp/tempAudio.aac -c copy -map 0:v:0 -map 1:a:0 out/" + outputName + ".mp4 -hide_banner -loglevel warning")
 
     # file clean up
@@ -77,7 +78,7 @@ def main(args):
         os.remove("temp/"+vid)
     
     end = time.time()
-    print(end - start)
+    print("total program runtime, in seconds - " + str(end - start))
 
     
 

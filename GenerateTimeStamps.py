@@ -1,8 +1,7 @@
 import numpy as np
 from tinytag import TinyTag
 from scipy.io.wavfile import read, write
-import os
-import sys
+import os, sys, csv
 
 def get_duration(filename):
     '''
@@ -135,6 +134,27 @@ def get_intensities(filename, bpm):
 
     return intensities
 
+def save_intensities(intensities, filename):
+    '''
+    Saves intensities from get_intensities(filename, bpm) as .csv
+    '''
+    ordered = []    
+    for key in intensities.keys():
+        ordered.append((key,intensities[key]))
+    
+    ordered = sorted(ordered)
+
+    with open("analysis/"+str(filename)+".csv", "w", newline='') as file:
+        fieldnames = ["Section","Intensity"]
+        writer = csv.DictWriter(file,fieldnames=fieldnames)
+        
+        writer.writeheader()
+      
+        for t in ordered:
+            writer.writerow({'Section': t[0], 'Intensity': t[1]})
+        
+        file.close()
+
 
 def guess_bpm(filename):
     '''
@@ -144,9 +164,9 @@ def guess_bpm(filename):
 
 def main(argv):
     '''
-    prints intensities to screen
+    stores intensities to file
     '''
-    print(get_intensities(argv[0],int(argv[1])))
+    save_intensities(get_intensities("music/"+str(argv[0]),int(argv[1])),argv[0])
 
 if __name__ == "__main__":
     main(sys.argv[1:])    

@@ -46,6 +46,7 @@ def preload():
     
     for vid in videosList:
         if vid.size[0] > 1280 or vid.size[1] > 720:
+            print(vid.filename)
             videosList.remove(vid)
     
     return videosList
