@@ -1,7 +1,3 @@
-# Examples:
-
-Forthcoming 03/21 on HATE LAB: https://www.youtube.com/channel/UCLXM6lFu1s7MjInzUk5bfNA
-
 # ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+) SET UP
 
 ## Required Folder structure:
@@ -80,3 +76,7 @@ There are also a small selection of videos in this repo to allow you to test the
 ## I run a company looking for a programmer like you, would you be interested in a position?
 
 - Please get in contact: richardpienaar1@gmail.com
+
+# Examples:
+
+Forthcoming 03/21 on HATE LAB: https://www.youtube.com/channel/UCLXM6lFu1s7MjInzUk5bfNA
