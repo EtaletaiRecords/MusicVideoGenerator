@@ -1,4 +1,8 @@
-# ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+) SET UP
+# Examples:
+
+Forthcoming 03/21 on HATE LAB: https://www.youtube.com/channel/UCLXM6lFu1s7MjInzUk5bfNA
+
+# 💡 SET UP
 
 ## Required Folder structure:
 
@@ -10,7 +14,7 @@
 #### MusicVideoGenerator.py
 #### *.py
 
-## INSTALL DEPENDENCIES FROM A CONDA ENVIRONMENT (strongly reccommended)
+## ⚫ INSTALL DEPENDENCIES FROM A CONDA ENVIRONMENT (strongly reccommended)
 
 ### make and activate new conda environment
 
@@ -22,11 +26,11 @@ conda activate [myEnv]
 conda install --file requirements1.txt
 pip install -r requirements2.txt
 
-# ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) USEAGE:
+# 🟢 USEAGE:
  
 > python MusicVideoGenerator.py -songName [song.wav] -bpm [int] --output [outputPrefix] --dynamic [True/False]
 
-# ![#1589F0](https://via.placeholder.com/15/1589F0/000000?text=+) FAQS:
+# 🛑 FAQS:
 
 ## What does it do?
 
@@ -76,7 +80,3 @@ There are also a small selection of videos in this repo to allow you to test the
 ## I run a company looking for a programmer like you, would you be interested in a position?
 
 - Please get in contact: richardpienaar1@gmail.com
-
-# Examples:
-
-Forthcoming 03/21 on HATE LAB: https://www.youtube.com/channel/UCLXM6lFu1s7MjInzUk5bfNA
