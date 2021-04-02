@@ -23,8 +23,8 @@ conda activate [myEnv]
 
 ### navigate to the MusicVideoGenerator folder then run
 
-conda install --file requirements1.txt
-pip install -r requirements2.txt
+conda install --file Requirements1.txt
+pip install -r Requirements2.txt
 
 # 🟢 USEAGE:
  
