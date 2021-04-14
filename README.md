@@ -1,34 +1,26 @@
-# Examples:
+# 💡 SETUP
 
-88756 - TOOLKIT LP: https://www.youtube.com/watch?v=XBd9xrGz3H4&list=PLylefra4mM2qWBDrMf0W8bVN3i_75XTCB
-
-# 💡 SET UP
-
-## Required Folder structure:
+## Required Files:
 
 #### music/ (folder for all song files, .wav only, no spaces in the name) 
-#### temp/ (required for intermediate video generation)
-#### out/ (output folder)
 #### titles/ (input videos that are LONG - only for long intro /outro songs, .mp4 only)
 #### videos/ (all other input videos, .mp4 only)
-#### MusicVideoGenerator.py
-#### *.py
 
 ## ⚫ INSTALL DEPENDENCIES FROM A CONDA ENVIRONMENT (strongly reccommended)
 
 ### make and activate new conda environment
 
-conda create -n [myEnv]
-conda activate [myEnv]
+```conda create -n [myEnv]```
+```conda activate [myEnv]```
 
 ### navigate to the MusicVideoGenerator folder then run
 
-conda install --file Requirements1.txt
-pip install -r Requirements2.txt
+```conda install --file Requirements.txt```
+```pip install -r Requirements2.txt```
 
 # 🟢 USEAGE:
  
-> python MusicVideoGenerator.py -songName [song.wav] -bpm [int] --output [outputPrefix] --dynamic [True/False]
+```python MusicVideoGenerator.py -songName [song.wav] -bpm [int] --output [outputPrefix] --dynamic [True/False]```
 
 # 🛑 FAQS:
 
