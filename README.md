@@ -1,8 +1,8 @@
 # Examples:
 
-88756 - TOOLKIT LP: https://www.youtube.com/watch?v=XBd9xrGz3H4&list=PLylefra4mM2qWBDrMf0W8bVN3i_75XTCB
+[88756 - TOOLKIT LP](https://www.youtube.com/watch?v=XBd9xrGz3H4&list=PLylefra4mM2qWBDrMf0W8bVN3i_75XTCB)
 
-# 💡 SET UP
+# 💡 SETUP
 
 ## Required Folder structure:
 
@@ -18,17 +18,17 @@
 
 ### make and activate new conda environment
 
-conda create -n [myEnv]
-conda activate [myEnv]
+```conda create -n [myEnv]```
+```conda activate [myEnv]```
 
 ### navigate to the MusicVideoGenerator folder then run
 
-conda install --file Requirements1.txt
-pip install -r Requirements2.txt
+```conda install --file Requirements1.txt```
+```pip3 install -r Requirements2.txt```
 
 # 🟢 USEAGE:
  
-> python MusicVideoGenerator.py -songName [song.wav] -bpm [int] --output [outputPrefix] --dynamic [True/False]
+```python3 MusicVideoGenerator.py -songName [song.wav] -bpm [int] --output [outputPrefix] --dynamic [True/False]```
 
 # 🛑 FAQS:
 
@@ -54,8 +54,8 @@ pip install -r Requirements2.txt
 ## Where can I find sample videos to use?
 
 Royalty Free:
-- https://www.pexels.com/
-- https://pixabay.com/
+- [Pexels](https://www.pexels.com/)
+- [Pixabay](https://pixabay.com/)
 
 There are also a small selection of videos in this repo to allow you to test the program. These are from pexels.  
 
@@ -65,7 +65,7 @@ There are also a small selection of videos in this repo to allow you to test the
 
 ## How fast is my song? What is my songs BPM?
 
-- https://www.beatsperminuteonline.com/
+- [beatsperminuteonline.com](https://www.beatsperminuteonline.com/)
 
 ## Richard, this thing is so slow it's making my head spin. I could do it way faster in Generic X movie editing software!
 
